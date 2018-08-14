@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Goro.Api.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Goro.Api.Controllers
@@ -10,10 +11,25 @@ namespace Goro.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly GourmetRepository _repository;
+
+        public ValuesController(GourmetRepository repository)
+        {
+            _repository = repository;
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<ActionResult<IEnumerable<string>>> Get()
         {
+            await GourmetClient.Search(1,1);
+
+            //var result = await _repository.GetAllAsync();
+            // foreach (var g in result)
+            // {
+            //     await _repository.DeleteAsync(g);
+            // }
+
             return new string[] { "value1", "value2" };
         }
 
