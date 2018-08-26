@@ -1,3 +1,4 @@
+using Goro.Api.Models;
 using Microsoft.Azure.Documents.Spatial;
 using Newtonsoft.Json;
 
@@ -5,6 +6,7 @@ namespace Goro.Api.Infrastructure.Models
 {
     public class GourmetEntity : DocumentBase
     {
+
         [JsonProperty(PropertyName = "season")]
 		public int Season { get; set; }
 
@@ -31,16 +33,26 @@ namespace Goro.Api.Infrastructure.Models
 		public bool? Closed { get; set; }
 
         [JsonProperty(PropertyName = "location")]
-		public string Location { get; set; }
+		public LocationEntity Location { get; set; }
+
+		public int ConvertId()
+        {
+            return int.Parse(Id);
+        }
+
+        public Location ConvertLocation()
+		{
+			return new Location{
+				lat = Location.Coordinates[1],
+				lng = Location.Coordinates[0]
+			};
+		}
     }
 
-    public class Location
+    public class LocationEntity
     {
-		[JsonProperty(PropertyName = "lat")]
-        public float Lat { get; set; }
-
-		[JsonProperty(PropertyName = "lng")]
-        public float Lng { get; set; }
+        [JsonProperty(PropertyName = "coordinates")]
+        public float[] Coordinates { get; set; }
     }
 
 }

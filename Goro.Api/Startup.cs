@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using Goro.Api.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,6 +40,8 @@ namespace Goro.Api
             });
             services.AddSingleton<GourmetRepository>();
 
+            services.AddAutoMapper();
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSwaggerGen(c =>
