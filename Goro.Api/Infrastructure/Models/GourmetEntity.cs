@@ -22,11 +22,13 @@ namespace Goro.Api.Infrastructure.Models
         [JsonProperty(PropertyName = "matome")]
 		public string Matome { get; set; }
 
-
         [JsonProperty(PropertyName = "phoneNumber")]
 		public string PhoneNumber { get; set; }
 
-        [JsonProperty(PropertyName = "address")]
+        [JsonProperty(PropertyName = "access")]
+		public string Access { get; set; }
+
+       [JsonProperty(PropertyName = "address")]
 		public string Address { get; set; }
 
         [JsonProperty(PropertyName = "closed")]

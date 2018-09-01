@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using AutoMapper;
 using Goro.Api.Infrastructure;
 using Goro.Api.Models;
@@ -38,7 +39,12 @@ namespace Goro.Api.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> Get()
         {
-            var result = await GourmetClient.Search();
+            var entity = await GourmetClient.SearchAsync();
+            var result = _mapper.Map<List<Gourmet>>(entity);
+            if (result == null || result.Count == 0)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
 
@@ -52,12 +58,16 @@ namespace Goro.Api.Controllers
         [HttpGet("{keyword}")]
         [ProducesResponseType(typeof(IEnumerable<Gourmet>), 200)]
         [ProducesResponseType(404)]
-        public IActionResult Get(string keyword)
+        public async Task<IActionResult> Get(string keyword)
         {
-//			var geocode = await GeocodeClient.GetGeocodeAsync(HttpUtility.UrlDecode(keyword));
-//			var result = await GourmetClient.SearchAsync(new Location { lat = geocode.results[0].geometry.location.lat, lng = geocode.results[0].geometry.location.lng });
-
-            return Ok(new List<Gourmet>());
+			var geocode = await GeocodeClient.GetGeocodeAsync(HttpUtility.UrlDecode(keyword));
+			var entity = await GourmetClient.SearchAsync(geocode.results[0].geometry.location.lng, geocode.results[0].geometry.location.lat);
+            var result = _mapper.Map<List<Gourmet>>(entity);
+            if (result == null || result.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
        /// <summary>
@@ -71,10 +81,15 @@ namespace Goro.Api.Controllers
         [HttpGet("{lat:float}/{lng:float}")]
         [ProducesResponseType(typeof(IEnumerable<Gourmet>), 200)]
         [ProducesResponseType(404)]
-        public IActionResult Get(float lat, float lng)
+        public async Task<IActionResult> Get(float lat, float lng)
         {
-//			var result = await GourmetClient.SearchAsync(new Location { lat = lat, lng = lng });
-           return Ok(new List<Gourmet>());
+			var entity = await GourmetClient.SearchAsync(lng, lat);
+            var result = _mapper.Map<List<Gourmet>>(entity);
+            if (result == null || result.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
     }
